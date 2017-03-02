@@ -1,11 +1,17 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include <time.h>
+/*  Disciplina: Estrutura de Dados - DCC302
+    Professor: Filipe Dwan.
+    Alunos: Diego Costa;
+           Talles Bezerra.
+/*
+
 /* Declaração das funções */
 void menu();
 void gerarNumeros();
 void salvarTXT(int v[], char nomeDoArquivo[], int tam);
-void leituraArquivos(char nomeDoArquivo[], int *refVet, int tam);
+void leituraArquivos(char nomeDoArquivo[], int* refVet, int tam);
 int selectionSort(int *vetor, int tam);
 int insertionSort(int *vetor, int tam);
 int bubbleSort(int *vetor, int tam);
@@ -16,7 +22,7 @@ int radixSort(int *vetor, int tam);
 int buscaSequencial(int *vetor, int tam, int valor);
 int buscaBinaria(int *vetor, int tam, int valor);
 double compMerge = 0, compQuick = 0, trocaQuick = 0;
-
+int flag_numeros_gerados = 0; //flag avisando se os numeros aleatorios foram gerados
 void menu(){
     int vetorCem[100];
     int vetorMil[1000];
@@ -24,24 +30,25 @@ void menu(){
     int vetorCemMil[100000];
     int tam,resultBuscaB, resultBuscaS, valor;
     int op;
-    printf("Escolha uma opcao para busca e ordenacao:\n");
-    printf("0 - Sair do algoritmo\n");
-    printf("1 - Gerar sequencia de numeros para ordenacao e busca.\n");
-    printf("2 - Ordenar utilizando selection sort.\n");
-    printf("3 - Ordenar utilizando insertion sort.\n");
-    printf("4 - Ordenar utilizando bubble sort.\n");
-    printf("5 - Ordenar utilizando heap sort.\n");
-    printf("6 - Ordenar utilizando merge sort.\n");
-    printf("7 - Ordenar utilizando quick sort.\n");
-    printf("8 - Ordenar utilizando radix sort.\n");
-    printf("9 - Fazer busca utilizando busca sequencial.\n");
-    printf("10 - Fazer busca utilizando busca binaria.\n");
+    printf("\t\t\t Escolha uma opcao para busca e ordenacao:\n");
+    printf("\t0 - Sair do algoritmo\n");
+    printf("\t1 - Gerar sequencia de numeros para ordenacao e busca.\n");
+    printf("\t2 - Ordenar utilizando selection sort.\n");
+    printf("\t3 - Ordenar utilizando insertion sort.\n");
+    printf("\t4 - Ordenar utilizando bubble sort.\n");
+    printf("\t5 - Ordenar utilizando heap sort.\n");
+    printf("\t6 - Ordenar utilizando merge sort.\n");
+    printf("\t7 - Ordenar utilizando quick sort.\n");
+    printf("\t8 - Ordenar utilizando radix sort.\n");
+    printf("\t9 - Fazer busca utilizando busca sequencial.\n");
+    printf("\t10 - Fazer busca utilizando busca binaria.\n");
     scanf("%d",&op);
     switch(op){
         case 0:
             exit(0);
             break;
         case 1 :
+            flag_numeros_gerados = 1;//Caso a opção de geração de números tenha sido selecionada a flag recebe 1
             gerarNumeros();
             system("pause"); system("cls");
             printf("\n");
@@ -49,77 +56,117 @@ void menu(){
             break;
         case 2:
             system("cls");
+            if(flag_numeros_gerados == 0){
+                printf("Nao ha numeros para ordenar. Retorne ao menu e selecione a opcao 1.\n");
+                printf("Aperte qualquer tecla para regressar ao menu.\n");
+                system("pause");
+                system("cls");
+                menu();
+                break;
+            }
             printf("ALGORITMO: SELECTION SORT\n");
-            leituraArquivos("vetorCem.txt", &vetorCem, 100); selectionSort(&vetorCem, 100);
+            leituraArquivos("vetorCem.txt", vetorCem, 100); selectionSort(vetorCem, 100);
             salvarTXT(vetorCem, "vetorCemOrdenado.txt", 100); printf("\n");
-            leituraArquivos("vetorMil.txt", &vetorMil, 1000); selectionSort(&vetorMil, 1000);
+            leituraArquivos("vetorMil.txt", vetorMil, 1000); selectionSort(vetorMil, 1000);
             salvarTXT(vetorCem, "vetorMilOrdenado.txt", 100); printf("\n");
-            leituraArquivos("vetorDezMil.txt", &vetorDezMil, 10000); selectionSort(&vetorDezMil, 10000);
+            leituraArquivos("vetorDezMil.txt", vetorDezMil, 10000); selectionSort(vetorDezMil, 10000);
             salvarTXT(vetorCem, "vetorDezMilOrdenado.txt", 100); printf("\n");
-            leituraArquivos("vetorCemMil.txt", &vetorCemMil, 100000); selectionSort(&vetorCemMil, 100000);
+            leituraArquivos("vetorCemMil.txt", vetorCemMil, 100000); selectionSort(vetorCemMil, 100000);
             salvarTXT(vetorCem, "vetorCemMilOrdenado.txt", 100); printf("\n");
             system("pause"); system("cls");
             menu();
             break;
         case 3:
             system("cls");
+            if(flag_numeros_gerados == 0){
+                printf("Nao ha numeros para ordenar. Retorne ao menu e selecione a opcao 1.\n");
+                printf("Aperte qualquer tecla para regressar ao menu.\n");
+                system("pause");
+                system("cls");
+                menu();
+                break;
+            }
             printf("ALGORITMO: INSERTION SORT\n");
-            leituraArquivos("vetorCem.txt", &vetorCem, 100); insertionSort(&vetorCem, 100);
+            leituraArquivos("vetorCem.txt", vetorCem, 100); insertionSort(vetorCem, 100);
             salvarTXT(vetorCem, "vetorCemOrdenado.txt", 100); printf("\n");
-            leituraArquivos("vetorMil.txt", &vetorMil, 1000); insertionSort(&vetorMil, 1000);
+            leituraArquivos("vetorMil.txt", vetorMil, 1000); insertionSort(vetorMil, 1000);
             salvarTXT(vetorCem, "vetorMilOrdenado.txt", 100); printf("\n");
-            leituraArquivos("vetorDezMil.txt", &vetorDezMil, 10000); insertionSort(&vetorDezMil, 10000);
+            leituraArquivos("vetorDezMil.txt", vetorDezMil, 10000); insertionSort(vetorDezMil, 10000);
             salvarTXT(vetorCem, "vetorDezMilOrdenado.txt", 100); printf("\n");
-            leituraArquivos("vetorCemMil.txt", &vetorCemMil, 100000); insertionSort(&vetorCemMil, 100000);
+            leituraArquivos("vetorCemMil.txt", vetorCemMil, 100000); insertionSort(vetorCemMil, 100000);
             salvarTXT(vetorCem, "vetorCemMilOrdenado.txt", 100); printf("\n");
             system("pause"); system("cls");
             menu();
             break;
         case 4:
             system("cls");
+            if(flag_numeros_gerados == 0){
+                printf("Nao ha numeros para ordenar. Retorne ao menu e selecione a opcao 1.\n");
+                printf("Aperte qualquer tecla para regressar ao menu.\n");
+                system("pause");
+                system("cls");
+                menu();
+                break;
+            }
             printf("ALGORITMO: BUBBLE SORT\n");
-            leituraArquivos("vetorCem.txt", &vetorCem, 100); bubbleSort(&vetorCem, 100);
+            leituraArquivos("vetorCem.txt", vetorCem, 100); bubbleSort(vetorCem, 100);
             salvarTXT(vetorCem, "vetorCemOrdenado.txt", 100); printf("\n");
-            leituraArquivos("vetorMil.txt", &vetorMil, 1000); bubbleSort(&vetorMil, 1000);
+            leituraArquivos("vetorMil.txt", vetorMil, 1000); bubbleSort(vetorMil, 1000);
             salvarTXT(vetorCem, "vetorMilOrdenado.txt", 100); printf("\n");
-            leituraArquivos("vetorDezMil.txt", &vetorDezMil, 10000); bubbleSort(&vetorDezMil, 10000);
+            leituraArquivos("vetorDezMil.txt", vetorDezMil, 10000); bubbleSort(vetorDezMil, 10000);
             salvarTXT(vetorCem, "vetorDezMilOrdenado.txt", 100); printf("\n");
-            leituraArquivos("vetorCemMil.txt", &vetorCemMil, 100000); bubbleSort(&vetorCemMil, 100000);
+            leituraArquivos("vetorCemMil.txt", vetorCemMil, 100000); bubbleSort(vetorCemMil, 100000);
             salvarTXT(vetorCem, "vetorCemMilOrdenado.txt", 100); printf("\n");
             system("pause"); system("cls");
             menu();
             break;
         case 5:
             system("cls");
+            if(flag_numeros_gerados == 0){
+                printf("Nao ha numeros para ordenar. Retorne ao menu e selecione a opcao 1.\n");
+                printf("Aperte qualquer tecla para regressar ao menu.\n");
+                system("pause");
+                system("cls");
+                menu();
+                break;
+            }
             printf("ALGORITMO: HEAP SORT\n");
-            leituraArquivos("vetorCem.txt", &vetorCem, 100); heapSort(&vetorCem, 100);
+            leituraArquivos("vetorCem.txt", vetorCem, 100); heapSort(vetorCem, 100);
             salvarTXT(vetorCem, "vetorCemOrdenado.txt", 100); printf("\n");
-            leituraArquivos("vetorMil.txt", &vetorMil, 1000); heapSort(&vetorMil, 1000);
+            leituraArquivos("vetorMil.txt", vetorMil, 1000); heapSort(vetorMil, 1000);
             salvarTXT(vetorCem, "vetorMilOrdenado.txt", 100); printf("\n");
-            leituraArquivos("vetorDezMil.txt", &vetorDezMil, 10000); heapSort(&vetorDezMil, 10000);
+            leituraArquivos("vetorDezMil.txt", vetorDezMil, 10000); heapSort(vetorDezMil, 10000);
             salvarTXT(vetorCem, "vetorDezMilOrdenado.txt", 100); printf("\n");
-            leituraArquivos("vetorCemMil.txt", &vetorCemMil, 100000); heapSort(&vetorCemMil, 100000);
+            leituraArquivos("vetorCemMil.txt", vetorCemMil, 100000); heapSort(vetorCemMil, 100000);
             salvarTXT(vetorCem, "vetorCemMilOrdenado.txt", 100); printf("\n");
             system("pause"); system("cls");
             menu();
             break;
         case 6:
             system("cls");
+            if(flag_numeros_gerados == 0){
+                printf("Nao ha numeros para ordenar. Retorne ao menu e selecione a opcao 1.\n");
+                printf("Aperte qualquer tecla para regressar ao menu.\n");
+                system("pause");
+                system("cls");
+                menu();
+                break;
+            }
             printf("ALGORITMO: MERGE SORT\n");
-            compMerge = 0; leituraArquivos("vetorCem.txt", &vetorCem, 100);
-            mergeSort(&vetorCem, 0, 100-1); salvarTXT(vetorCem, "vetorCemOrdenado.txt", 100);
+            compMerge = 0; leituraArquivos("vetorCem.txt", vetorCem, 100);
+            mergeSort(vetorCem, 0, 100-1); salvarTXT(vetorCem, "vetorCemOrdenado.txt", 100);
             printf("Tamanho: 100\n");
             printf("Quant. de Comparacoes: %.0f\n\n",compMerge);
-            compMerge = 0; leituraArquivos("vetorMil.txt", &vetorMil, 1000);
-            mergeSort(&vetorMil, 0, 1000-1); salvarTXT(vetorCem, "vetorMilOrdenado.txt", 100);
+            compMerge = 0; leituraArquivos("vetorMil.txt", vetorMil, 1000);
+            mergeSort(vetorMil, 0, 1000-1); salvarTXT(vetorCem, "vetorMilOrdenado.txt", 100);
             printf("Tamanho: 1000\n");
             printf("Quant. de Comparacoes: %.0f\n\n",compMerge);
-            compMerge = 0; leituraArquivos("vetorDezMil.txt", &vetorDezMil, 10000);
-            mergeSort(&vetorDezMil, 0, 10000-1); salvarTXT(vetorCem, "vetorDezMilOrdenado.txt", 100);
+            compMerge = 0; leituraArquivos("vetorDezMil.txt", vetorDezMil, 10000);
+            mergeSort(vetorDezMil, 0, 10000-1); salvarTXT(vetorCem, "vetorDezMilOrdenado.txt", 100);
             printf("Tamanho: 10000\n");
             printf("Quant. de Comparacoes: %.0f\n\n",compMerge);
-            compMerge = 0; leituraArquivos("vetorCemMil.txt", &vetorCemMil, 100000);
-            mergeSort(&vetorCemMil, 0, 100000-1); salvarTXT(vetorCem, "vetorCemMilOrdenado.txt", 100);
+            compMerge = 0; leituraArquivos("vetorCemMil.txt", vetorCemMil, 100000);
+            mergeSort(vetorCemMil, 0, 100000-1); salvarTXT(vetorCem, "vetorCemMilOrdenado.txt", 100);
             printf("Tamanho: 100000\n");
             printf("Quant. de Comparacoes: %.0f\n\n",compMerge);
             system("pause"); system("cls");
@@ -127,24 +174,32 @@ void menu(){
             break;
         case 7:
             system("cls");
+            if(flag_numeros_gerados == 0){
+                printf("Nao ha numeros para ordenar. Retorne ao menu e selecione a opcao 1.\n");
+                printf("Aperte qualquer tecla para regressar ao menu.\n");
+                system("pause");
+                system("cls");
+                menu();
+                break;
+            }
             printf("ALGORITMO: QUICK SORT\n");
-            compQuick = 0; trocaQuick = 0; leituraArquivos("vetorCem.txt", &vetorCem, 100);
-            quickSort(&vetorCem, 0, 100-1); salvarTXT(vetorCem, "vetorCemOrdenado.txt", 100);
+            compQuick = 0; trocaQuick = 0; leituraArquivos("vetorCem.txt", vetorCem, 100);
+            quickSort(vetorCem, 0, 100-1); salvarTXT(vetorCem, "vetorCemOrdenado.txt", 100);
             printf("Tamanho: 100\n");
             printf("Quant. de Comparacoes: %.0f\n",compQuick);
             printf("Quant. de Trocas: %.0f\n\n",trocaQuick);
-            compQuick = 0; trocaQuick = 0; leituraArquivos("vetorMil.txt", &vetorMil, 1000);
-            quickSort(&vetorMil, 0, 1000-1); salvarTXT(vetorCem, "vetorMilOrdenado.txt", 100);
+            compQuick = 0; trocaQuick = 0; leituraArquivos("vetorMil.txt", vetorMil, 1000);
+            quickSort(vetorMil, 0, 1000-1); salvarTXT(vetorCem, "vetorMilOrdenado.txt", 100);
             printf("Tamanho: 1000\n");
             printf("Quant. de Comparacoes: %.0f\n",compQuick);
             printf("Quant. de Trocas: %.0f\n\n",trocaQuick);
-            compQuick = 0; trocaQuick = 0; leituraArquivos("vetorDezMil.txt", &vetorDezMil, 10000);
-            quickSort(&vetorDezMil, 0, 10000-1); salvarTXT(vetorCem, "vetorDezMilOrdenado.txt", 100);
+            compQuick = 0; trocaQuick = 0; leituraArquivos("vetorDezMil.txt", vetorDezMil, 10000);
+            quickSort(vetorDezMil, 0, 10000-1); salvarTXT(vetorCem, "vetorDezMilOrdenado.txt", 100);
             printf("Tamanho: 10000\n");
             printf("Quant. de Comparacoes: %.0f\n",compQuick);
             printf("Quant. de Trocas: %.0f\n\n",trocaQuick);
-            compQuick = 0; trocaQuick = 0; leituraArquivos("vetorCemMil.txt", &vetorCemMil, 100000);
-            quickSort(&vetorCemMil, 0, 100000-1); salvarTXT(vetorCem, "vetorCemMilOrdenado.txt", 100);
+            compQuick = 0; trocaQuick = 0; leituraArquivos("vetorCemMil.txt", vetorCemMil, 100000);
+            quickSort(vetorCemMil, 0, 100000-1); salvarTXT(vetorCem, "vetorCemMilOrdenado.txt", 100);
             printf("Tamanho: 100000\n");
             printf("Quant. de Comparacoes: %.0f\n",compQuick);
             printf("Quant. de Trocas: %.0f\n\n",trocaQuick);
@@ -153,38 +208,54 @@ void menu(){
             break;
         case 8:
             system("cls");
+            if(flag_numeros_gerados == 0){
+                printf("Nao ha numeros para ordenar. Retorne ao menu e selecione a opcao 1.\n");
+                printf("Aperte qualquer tecla para regressar ao menu.\n");
+                system("pause");
+                system("cls");
+                menu();
+                break;
+            }
             printf("ALGORITMO: RADIX SORT\n");
-            leituraArquivos("vetorCem.txt", &vetorCem, 100); radixSort(&vetorCem, 100);
+            leituraArquivos("vetorCem.txt", vetorCem, 100); radixSort(vetorCem, 100);
             salvarTXT(vetorCem, "vetorCemOrdenado.txt", 100); printf("\n");
-            leituraArquivos("vetorMil.txt", &vetorMil, 1000); radixSort(&vetorMil, 1000);
+            leituraArquivos("vetorMil.txt", vetorMil, 1000); radixSort(vetorMil, 1000);
             salvarTXT(vetorCem, "vetorMilOrdenado.txt", 100); printf("\n");
-            leituraArquivos("vetorDezMil.txt", &vetorDezMil, 10000); radixSort(&vetorDezMil, 10000);
+            leituraArquivos("vetorDezMil.txt", vetorDezMil, 10000); radixSort(vetorDezMil, 10000);
             salvarTXT(vetorCem, "vetorDezMilOrdenado.txt", 100); printf("\n");
-            leituraArquivos("vetorCemMil.txt", &vetorCemMil, 100000); radixSort(&vetorCemMil, 100000);
+            leituraArquivos("vetorCemMil.txt", vetorCemMil, 100000); radixSort(vetorCemMil, 100000);
             salvarTXT(vetorCem, "vetorCemMilOrdenado.txt", 100); printf("\n");
             system("pause"); system("cls");
             menu();
             break;
         case 9:
             system("cls");
+            if(flag_numeros_gerados == 0){
+                printf("Nao ha numeros para ordenar. Retorne ao menu e selecione a opcao 1.\n");
+                printf("Aperte qualquer tecla para regressar ao menu.\n");
+                system("pause");
+                system("cls");
+                menu();
+                break;
+            }
             printf("ALGORITMO: BUSCA SEQUENCIAL\n");
             printf("Busque um valor: "); scanf("%d", &valor);
             printf("Tamanho do vetor: "); scanf("%d", &tam);
             if(tam==100){
-                leituraArquivos("vetorCem.txt", &vetorCem, 100);
-                resultBuscaS = buscaSequencial(&vetorCem, 100, valor);
+                leituraArquivos("vetorCem.txt", vetorCem, 100);
+                resultBuscaS = buscaSequencial(vetorCem, 100, valor);
             }
             else if(tam==1000){
-                leituraArquivos("vetorMil.txt", &vetorMil, 1000);
-                resultBuscaS = buscaSequencial(&vetorMil, 1000, valor);
+                leituraArquivos("vetorMil.txt", vetorMil, 1000);
+                resultBuscaS = buscaSequencial(vetorMil, 1000, valor);
             }
             else if(tam==10000){
-                leituraArquivos("vetorDezMil.txt", &vetorDezMil, 10000);
-                resultBuscaS = buscaSequencial(&vetorDezMil, 10000, valor);
+                leituraArquivos("vetorDezMil.txt", vetorDezMil, 10000);
+                resultBuscaS = buscaSequencial(vetorDezMil, 10000, valor);
             }
             else if(tam==100000){
-                leituraArquivos("vetorCemMil.txt", &vetorCemMil, 100000);
-                resultBuscaS = buscaSequencial(&vetorCemMil, 100000, valor);
+                leituraArquivos("vetorCemMil.txt", vetorCemMil, 100000);
+                resultBuscaS = buscaSequencial(vetorCemMil, 100000, valor);
             }
             else{
                 printf("Tamanho invalido\n");
@@ -200,24 +271,32 @@ void menu(){
             break;
         case 10:
             system("cls");
+            if(flag_numeros_gerados == 0){
+                printf("Nao ha numeros para ordenar. Retorne ao menu e selecione a opcao 1.\n");
+                printf("Aperte qualquer tecla para regressar ao menu.\n");
+                system("pause");
+                system("cls");
+                menu();
+                break;
+            }
             printf("ALGORITMO: BUSCA BINARIA\n");
             printf("Busque um valor: "); scanf("%d", &valor);
             printf("Tamanho do vetor: "); scanf("%d", &tam);
             if(tam==100){
-                leituraArquivos("vetorCemOrdenado.txt", &vetorCem, 100);
-                resultBuscaB = buscaBinaria(&vetorCem, 100, valor);
+                leituraArquivos("vetorCemOrdenado.txt", vetorCem, 100);
+                resultBuscaB = buscaBinaria(vetorCem, 100, valor);
             }
             else if(tam==1000){
-                leituraArquivos("vetorMilOrdenado.txt", &vetorMil, 1000);
-                resultBuscaB = buscaBinaria(&vetorMil, 1000, valor);
+                leituraArquivos("vetorMilOrdenado.txt", vetorMil, 1000);
+                resultBuscaB = buscaBinaria(vetorMil, 1000, valor);
             }
             else if(tam==10000){
-                leituraArquivos("vetorDezMilOrdenado.txt", &vetorDezMil, 10000);
-                resultBuscaB = buscaBinaria(&vetorDezMil, 10000, valor);
+                leituraArquivos("vetorDezMilOrdenado.txt", vetorDezMil, 10000);
+                resultBuscaB = buscaBinaria(vetorDezMil, 10000, valor);
             }
             else if(tam==100000){
-                leituraArquivos("vetorCemMilOrdenado.txt", &vetorCemMil, 100000);
-                resultBuscaB = buscaBinaria(&vetorCemMil, 100000, valor);
+                leituraArquivos("vetorCemMilOrdenado.txt", vetorCemMil, 100000);
+                resultBuscaB = buscaBinaria(vetorCemMil, 100000, valor);
             }
             else{
                 printf("Tamanho invalido\n");
@@ -254,7 +333,7 @@ void salvarTXT(int v[], char nomeDoArquivo[], int tam){//vetor a ser gravado, no
 
 /* função para leitura dos arquivos*/
 void leituraArquivos(char nomeDoArquivo[], int *refVet, int tam){
-    int vetor[tam];//Vetor para onde os elementos do arquivo seram trazidos
+    int vetor[tam];//Vetor para onde os elementos do arquivo serão trazidos
     int i;
     FILE * arq = fopen(nomeDoArquivo, "rb");//abre o arquino no modo de leitura binário
     /*fread(endereço para onde vão as informações, tamanho de cada dado, quantidade de dados a ser lida, arquivo de onde pegar os dados*/
